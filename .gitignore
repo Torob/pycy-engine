@@ -1,0 +1,13 @@
+.history
+.vscode
+
+*.pyc
+*.DS_STORE
+
+*.so
+*/build/*
+
+.backup.lock
+
+.env
+.p3
