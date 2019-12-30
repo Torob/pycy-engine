@@ -8,7 +8,11 @@ class BaseEngineRequestHandler(RequestHandler):
         body = "application/json"
         self.set_header(header, body)
         # parse and escape all arguments
-        self.parsed_args = {k: cgi.escape(''.join(v)) for k, v in self.request.arguments.iteritems()}
+        _args = self.request.arguments
+        self.parsed_args = {}
+        for key in _args:
+            v = ''.join([t.decode('utf-') for t in _args[key]])
+            self.parsed_args[key] = cgi.escape(v)
 
     def on_connection_close(self):
         self.wait_future.cancel()
