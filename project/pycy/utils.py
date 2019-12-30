@@ -1,4 +1,5 @@
 import base64
+from persistqueue import PDict
 
 
 class BasicAuthMixin(object):
@@ -41,7 +42,8 @@ class BasicAuthMixin(object):
 
 class BasicCythonWrapper(object):
     def __init__(self, *args, **kwargs):
-        self.q_store = kwargs.get('q_store', None)
+        self.qstore_path = kwargs.get('qstore_path', 'data')
+        self.qstore_name = kwargs.get('qstore_name', 'qStore')
 
     def renew(self):
         self.handler = None
@@ -49,11 +51,13 @@ class BasicCythonWrapper(object):
 
     def go_live(self):
         self.is_live = True
-        self.q_store[self.q_prefix + 'is_live'] = True
+        q_store = PDict(self.qstore_path, self.qstore_name)
+        q_store[self.q_prefix + 'is_live'] = True
 
     def go_fake(self):
         self.is_live = False
-        self.q_store[self.q_prefix + 'is_live'] = False
+        q_store = PDict(self.qstore_path, self.qstore_name)
+        q_store[self.q_prefix + 'is_live'] = False
 
     def start_loading(self):
         self.is_loading = True
